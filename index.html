@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 명우회 야유회 일정표</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    
+    .header p {
+      font-size: 14px;
+      opacity: 0.95;
+    }
+    
+    .content {
+      padding: 1.5rem;
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+    }
+    
+    .tab-btn {
+      padding: 10px 16px;
+      border: 1px solid #e0e0e0;
+      background: white;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    
+    .tab-btn:hover {
+      border-color: #667eea;
+      background: #f5f7ff;
+    }
+    
+    .tab-btn.active {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+    
+    .day-header {
+      background: #f5f7ff;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    
+    .day-header p {
+      font-size: 12px;
+      color: #667eea;
+      margin: 0 0 0.5rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .day-header h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+      color: #333;
+    }
+    
+    .schedule-item {
+      background: white;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      gap: 12px;
+    }
+    
+    .time {
+      font-size: 13px;
+      font-weight: 600;
+      color: #999;
+      min-width: 50px;
+    }
+    
+    .schedule-content h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 0 0 0.25rem;
+      color: #333;
+    }
+    
+    .schedule-content p {
+      font-size: 13px;
+      color: #666;
+      margin: 0;
+    }
+    
+    .schedule-content p.meta {
+      font-size: 12px;
+      color: #999;
+      margin-top: 0.5rem;
+    }
+    
+    .schedule-content a {
+      font-size: 12px;
+      color: #667eea;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .schedule-content a:hover {
+      text-decoration: underline;
+    }
+    
+    .day-section {
+      display: none;
+    }
+    
+    .day-section.active {
+      display: block;
+    }
+    
+    .info-box {
+      background: #f5f7ff;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-top: 1.5rem;
+    }
+    
+    .info-box p {
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      margin: 0 0 0.75rem;
+      text-transform: uppercase;
+      color: #667eea;
+    }
+    
+    .info-box h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+      margin: 0 0 0.5rem;
+    }
+    
+    .info-box p.address {
+      font-size: 13px;
+      color: #666;
+      margin: 0;
+    }
+    
+    .info-box a {
+      font-size: 12px;
+      color: #667eea;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .footer {
+      background: #f9f9f9;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      border-top: 1px solid #e8e8e8;
+      font-size: 12px;
+      color: #999;
+    }
+    
+    .badge {
+      display: inline-block;
+      background: #fff3cd;
+      color: #856404;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🚗 2026 명우회 야유회</h1>
+      <p>부산 2박 3일 여행 • 06.26(금) ~ 06.28(일)</p>
+    </div>
+    
+    <div class="content">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchDay(1, this)">1일차 06.26</button>
+        <button class="tab-btn" onclick="switchDay(2, this)">2일차 06.27</button>
+        <button class="tab-btn" onclick="switchDay(3, this)">3일차 06.28</button>
+      </div>
+
+      <!-- 1일차 -->
+      <div class="day-section active" id="day-1">
+        <div class="day-header">
+          <p>1일차 • 06.26(금)</p>
+          <h3>부산으로 출발</h3>
+        </div>
+
+        <div class="schedule-item">
+          <div class="time">08:00</div>
+          <div class="schedule-content">
+            <h4>집결 및 픽업</h4>
+            <p>각자 집 앞 픽업</p>
+            <p class="meta">→ 명수회원 (대근, 종록) / 요한 / 의준회원</p>
+          </div>
+        </div>
+
+        <div class="schedule-item">
+          <div class="time">12:30</div>
+          <div class="schedule-content">
+            <h4>부산으로 출발</h4>
+            <p>예상 소요시간 약 4시간</p>
+          </div>
+        </div>
+
+        <div class="schedule-item">
+          <div class="time">14:00</div>
+          <div class="schedule-content">
+            <h4>점심식사</h4>
+            <p>장소: 미정</p>
+            <span class="badge">예정</span>
+          </div>
+        </div>
+
+        <div class="schedule-item">
+          <div class="time">16:00</div>
+          <div class="schedule-content">
+            <h4>숙소 도착</h4>
+            <p>레디언트 남포호텔</p>
+            <p class="meta">부산 중구 중구로5번길 14</p>
+          </div>
+        </div>
+
+        <div class="schedule-item">
+          <div class="time">18:00</div>
+          <div class="schedule-content">
+            <h4>저녁식사</h4>
+            <p>장소: 미정</p>
+            <span class="badge">예정</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2일차 -->
+      <div class="day-section" id="day-2">
+        <div class="day-header">
+          <p>2일차 • 06.27(토)</p>
+          <h3>부산 야외활동 & 투어</h3>
+        </div>
+
+        <div class="schedule-item">
+          <div class="time">08:00</div>
+          <div class="schedule-content">
+            <h4>아침식사</h4>
+            <p>장소: 미정</p>
+            <span class="badge">예정</span>
+          </div>
+        </div>
+
+        <div class="schedule-item">
+          <div class="time">11:00</div>
+          <div class="schedule-content">
+            <h4>부산 모빌리티쇼 탐방</h4>
+            <p>BEXCO (부산 국제전시컨벤션센터)</p>
+            <a href="https://youtu.be/nLvgses3ZgY" target="_blank">▶ 영상 보기</a>
+          </div>
+        </div>
+
+        <div class="schedule-item">
+          <div class="time">13:00</div>
+          <div class="schedule-content">
+            <h4>점심식사</h4>
+            <p>장소: 미정</p>
+            <span class="badge">예정</span>
+          </div>
+        </div>
+
+        <div class="schedule-item">
+          <div class="time">14:00</div>
+          <div class="schedule-content">
+            <h4>🎯 레이저태그 스포츠</h4>
+            <p>레이저 서바이벌 게임</p>
+            <a href="https://youtu.be/pslMvUkK96U" target="_blank">▶ 영상 보기</a>
+          </div>
+        </div>
+
+        <div class="schedule-item">
+          <div class="time">16:00</div>
+          <div class="schedule-content">
+            <h4>숙소로 이동 & 휴식</h4>
+            <p>개인정비 시간</p>
+          </div>
+        </div>
+
+        <div class="schedule-item">
+          <div class="time">18:00</div>
+          <div class="schedule-content">
+            <h4>저녁식사</h4>
+            <p>장소: 미정</p>
+            <span class="badge">예정</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3일차 -->
+      <div class="day-section" id="day-3">
+        <div class="day-header">
+          <p>3일차 • 06.28(일)</p>
+          <h3>귀가</h3>
+        </div>
+
+        <div class="schedule-item">
+          <div class="time">08:00</div>
+          <div class="schedule-content">
+            <h4>기상</h4>
+            <p>10시 30분 예정</p>
+          </div>
+        </div>
+
+        <div class="schedule-item">
+          <div class="time">11:00</div>
+          <div class="schedule-content">
+            <h4>아침식사</h4>
+            <p>장소: 미정</p>
+            <span class="badge">예정</span>
+          </div>
+        </div>
+
+        <div class="schedule-item">
+          <div class="time">12:00</div>
+          <div class="schedule-content">
+            <h4>부산에서 출발</h4>
+            <p>이천으로 귀가</p>
+          </div>
+        </div>
+
+        <div class="schedule-item">
+          <div class="time">17:30</div>
+          <div class="schedule-content">
+            <h4>이천 도착</h4>
+            <p>예상 도착 시간</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 숙소 정보 -->
+      <div class="info-box">
+        <p>🏨 숙소 정보</p>
+        <h4>레디언트 남포호텔</h4>
+        <p class="address">부산 중구 중구로5번길 14</p>
+        <a href="https://map.naver.com/p/entry/place/1590124407?lng=129.0266104&lat=35.0981493&placePath=%2Fhome&entry=plt&searchType=place" target="_blank">📍 네이버 지도 보기</a>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>프로토타입 버전 • 식사 장소 및 세부 일정은 추후 업데이트될 수 있습니다</p>
+    </div>
+  </div>
+
+  <script>
+    function switchDay(day, button) {
+      // 모든 day-section 숨기기
+      document.querySelectorAll('.day-section').forEach(el => {
+        el.classList.remove('active');
+      });
+      
+      // 선택된 day 보이기
+      document.getElementById('day-' + day).classList.add('active');
+      
+      // 버튼 스타일 업데이트
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      button.classList.add('active');
+    }
+  </script>
+</body>
+</html>
