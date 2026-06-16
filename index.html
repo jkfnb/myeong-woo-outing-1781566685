@@ -345,6 +345,8 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
   <div class="container">
@@ -379,8 +381,8 @@
         <button class="tab-btn active" onclick="switchDay(1, this)">📅 1일차</button>
         <button class="tab-btn" onclick="switchDay(2, this)">📅 2일차</button>
         <button class="tab-btn" onclick="switchDay(3, this)">📅 3일차</button>
+        <button class="tab-btn" onclick="showRoute(this)" style="background: linear-gradient(135deg, #10b981, #34d399); color: white; border-color: #10b981;">🗺️ 이동동선 이미지보기</button>
         <button class="tab-btn" onclick="showBudget(this)" style="background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; border-color: #f59e0b;">💰 정산</button>
-        <button class="tab-btn" onclick="showRoute(this)" style="background: linear-gradient(135deg, #10b981, #34d399); color: white; border-color: #10b981;">🗺️ 동선</button>
       </div>
     </div>
 
@@ -752,7 +754,7 @@
       <div style="background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; padding: 1.2rem; margin-bottom: 1.2rem;">
         <h4 style="font-size: 15px; font-weight: 800; color: #6366f1; margin: 0 0 0.3rem;">1️⃣ 1일차 (금) · 도보권</h4>
         <p style="font-size: 12px; color: var(--text-light); margin: 0 0 0.8rem;">🏨 숙소 16:00 → 🦑 김해식당 18:00</p>
-        <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=129.0240%2C35.0950%2C129.0320%2C35.1010&amp;layer=mapnik&amp;marker=35.0981%2C129.0267" style="width:100%; height:220px; border:0; border-radius:12px;" loading="lazy"></iframe>
+        <div id="map1" style="width:100%; height:220px; border-radius:12px; overflow:hidden;"></div>
         <div style="display: flex; align-items: center; gap: 8px; margin-top: 0.7rem; font-size: 13px;">
           <span style="background: rgba(99,102,241,0.1); color: #6366f1; padding: 4px 10px; border-radius: 20px; font-weight: 700;">🚶 도보 5분</span>
           <span style="color: var(--text-light);">숙소 → 김해식당 (자갈치 근처)</span>
@@ -764,7 +766,7 @@
       <div style="background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; padding: 1.2rem; margin-bottom: 1.2rem;">
         <h4 style="font-size: 15px; font-weight: 800; color: #ec4899; margin: 0 0 0.3rem;">2️⃣ 2일차 (토) · 차량 이동 🚐</h4>
         <p style="font-size: 12px; color: var(--text-light); margin: 0 0 0.8rem;">남포동~해운대~부산역을 크게 도는 날</p>
-        <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=129.0150%2C35.0850%2C129.1500%2C35.1800&amp;layer=mapnik" style="width:100%; height:280px; border:0; border-radius:12px;" loading="lazy"></iframe>
+        <div id="map2" style="width:100%; height:300px; border-radius:12px; overflow:hidden;"></div>
         <!-- 구간별 이동시간 -->
         <div style="margin-top: 0.9rem; display: flex; flex-direction: column; gap: 8px;">
           <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
@@ -794,7 +796,7 @@
       <div style="background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; padding: 1.2rem; margin-bottom: 1rem;">
         <h4 style="font-size: 15px; font-weight: 800; color: #0ea5e9; margin: 0 0 0.3rem;">3️⃣ 3일차 (일) · 도보권</h4>
         <p style="font-size: 12px; color: var(--text-light); margin: 0 0 0.8rem;">🏨 숙소 기상 → 🐟 오복식당 11시 → 출발</p>
-        <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=129.0240%2C35.0945%2C129.0300%2C35.1005&amp;layer=mapnik&amp;marker=35.0969%2C129.0270" style="width:100%; height:220px; border:0; border-radius:12px;" loading="lazy"></iframe>
+        <div id="map3" style="width:100%; height:220px; border-radius:12px; overflow:hidden;"></div>
         <div style="display: flex; align-items: center; gap: 8px; margin-top: 0.7rem; font-size: 13px;">
           <span style="background: rgba(14,165,233,0.1); color: #0ea5e9; padding: 4px 10px; border-radius: 20px; font-weight: 700;">🚶 도보 2분</span>
           <span style="color: var(--text-light);">숙소 → 오복식당, 12시 출발</span>
@@ -802,7 +804,7 @@
         <a href="https://map.naver.com/p/search/오복식당 자갈치" target="_blank" style="display: block; text-align: center; margin-top: 0.8rem; padding: 9px; background: #10b981; color: white; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none;">🧭 네이버 길찾기</a>
       </div>
 
-      <p style="font-size: 12px; color: var(--text-light); margin-top: 1rem; text-align: center;">💡 이동시간은 평소 교통 기준 대략값이에요 · 지도는 손가락으로 움직일 수 있어요</p>
+      <p style="font-size: 12px; color: var(--text-light); margin-top: 1rem; text-align: center;">💡 핀을 누르면 장소 이름이 떠요 · 이동시간은 평소 교통 기준 대략값</p>
     </div>
 
     <div class="footer">
@@ -854,6 +856,79 @@
         btn.classList.remove('active');
       });
       button.classList.add('active');
+      initRouteMaps();
+    }
+
+    // ===== Leaflet 동선 지도 =====
+    let routeMapsReady = false;
+    function initRouteMaps() {
+      if (routeMapsReady || typeof L === 'undefined') {
+        // 이미 만들었으면 크기만 다시 계산
+        if (routeMapsReady) {
+          setTimeout(() => {
+            [window._m1, window._m2, window._m3].forEach(m => { if (m) m.invalidateSize(); });
+          }, 100);
+        }
+        return;
+      }
+      routeMapsReady = true;
+
+      const tile = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+      const attr = '© OpenStreetMap';
+
+      // 좌표
+      const sukso = [35.0981, 129.0267];      // 숙소/남포동
+      const gimhae = [35.0975, 129.0299];     // 김해식당
+      const gukbap = [35.1419, 129.0620];     // 한약방국밥
+      const bexco = [35.1690, 129.1360];      // BEXCO
+      const gop = [35.1102, 129.0384];        // 그집곱도리탕
+      const yeongdo = [35.0973, 129.0331];    // 영도다리횟집
+      const obok = [35.0969, 129.0270];       // 오복식당
+
+      // 색깔 핀 만들기 함수
+      function pin(num, color) {
+        return L.divIcon({
+          className: '',
+          html: '<div style="background:' + color + ';width:26px;height:26px;border-radius:50%;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:13px;">' + num + '</div>',
+          iconSize: [26, 26],
+          iconAnchor: [13, 13]
+        });
+      }
+
+      // --- 1일차 지도 ---
+      const m1 = L.map('map1', { scrollWheelZoom: false }).setView([35.0978, 129.0283], 16);
+      L.tileLayer(tile, { attribution: attr }).addTo(m1);
+      L.marker(sukso, { icon: pin('🏨', '#0ea5e9') }).addTo(m1).bindPopup('숙소 (16:00 도착)');
+      L.marker(gimhae, { icon: pin('🦑', '#f59e0b') }).addTo(m1).bindPopup('김해식당 (18:00 저녁)');
+      L.polyline([sukso, gimhae], { color: '#6366f1', weight: 4, dashArray: '8 6' }).addTo(m1);
+      window._m1 = m1;
+
+      // --- 2일차 지도 ---
+      const m2 = L.map('map2', { scrollWheelZoom: false });
+      L.tileLayer(tile, { attribution: attr }).addTo(m2);
+      L.marker(gukbap, { icon: pin('1', '#10b981') }).addTo(m2).bindPopup('① 한약방국밥 (아침 10시)');
+      L.marker(bexco, { icon: pin('2', '#3b82f6') }).addTo(m2).bindPopup('② BEXCO 모빌리티쇼 (11시)');
+      L.marker(gop, { icon: pin('3', '#f59e0b') }).addTo(m2).bindPopup('③ 그집곱도리탕 (점심 13:30)');
+      L.marker(yeongdo, { icon: pin('4', '#d4537e') }).addTo(m2).bindPopup('④ 영도다리횟집 (저녁 18시)');
+      const line2 = L.polyline([gukbap, bexco, gop, yeongdo], { color: '#ec4899', weight: 4, dashArray: '8 6' }).addTo(m2);
+      m2.fitBounds(line2.getBounds(), { padding: [35, 35] });
+      window._m2 = m2;
+
+      // --- 3일차 지도 ---
+      const m3 = L.map('map3', { scrollWheelZoom: false }).setView([35.0975, 129.0269], 16);
+      L.tileLayer(tile, { attribution: attr }).addTo(m3);
+      L.marker(sukso, { icon: pin('🏨', '#0ea5e9') }).addTo(m3).bindPopup('숙소 (기상)');
+      L.marker(obok, { icon: pin('🐟', '#10b981') }).addTo(m3).bindPopup('오복식당 (아침 11시)');
+      L.polyline([sukso, obok], { color: '#0ea5e9', weight: 4, dashArray: '8 6' }).addTo(m3);
+      window._m3 = m3;
+
+      // 탭이 열린 직후라 크기 재계산
+      setTimeout(() => {
+        m1.invalidateSize();
+        m2.invalidateSize();
+        m2.fitBounds(line2.getBounds(), { padding: [35, 35] });
+        m3.invalidateSize();
+      }, 200);
     }
 
     // 지출 항목 기본 데이터 (이미지 기준)
