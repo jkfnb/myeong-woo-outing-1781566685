@@ -382,7 +382,7 @@
       <div id="weather-display" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
         <div style="text-align: center; color: var(--text-light); font-size: 13px; grid-column: 1 / -1; padding: 1rem;">날씨 정보를 불러오는 중...</div>
       </div>
-      <p style="font-size: 11px; color: var(--text-light); margin: 1rem 0 0; text-align: center;">📍 부산 광역시 · 실시간 예보 (여행 7일 전부터 정확)</p>
+      <p style="font-size: 11px; color: var(--text-light); margin: 1rem 0 0; text-align: center;">📍 부산 중구 남포동 (숙소 인근) · 실시간 예보 (여행 7일 전부터 정확)</p>
     </div>
 
     <div class="tabs-wrapper">
@@ -761,8 +761,8 @@
     // ===== 부산 날씨 위젯 =====
     async function loadWeather() {
       const display = document.getElementById('weather-display');
-      // 부산 좌표
-      const lat = 35.1796, lon = 129.0756;
+      // 부산 중구 남포동 (숙소 위치)
+      const lat = 35.0981, lon = 129.0266;
       const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon +
         '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max' +
         '&timezone=Asia%2FSeoul&start_date=2026-06-26&end_date=2026-06-28';
