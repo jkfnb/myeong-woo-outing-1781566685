@@ -696,7 +696,34 @@
       <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(251, 146, 60, 0.12) 100%); border-left: 5px solid #f59e0b; border-radius: 12px; padding: 1.3rem; margin-bottom: 1.5rem;">
         <p style="font-size: 12px; color: #f59e0b; margin: 0 0 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">💰 지출 정산</p>
         <h3 style="font-size: 22px; font-weight: 800; color: var(--text); margin: 0;">명우회 부산여행 사용금액</h3>
-        <p style="font-size: 12px; color: var(--text-light); margin: 0.6rem 0 0;">✏️ 항목명·금액을 직접 수정하고, 추가/삭제할 수 있어요</p>
+        <p id="budget-status" style="font-size: 12px; color: var(--text-light); margin: 0.6rem 0 0;">불러오는 중...</p>
+      </div>
+
+      <!-- 수정 모드 컨트롤 -->
+      <div id="edit-control" style="background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
+        <!-- 보기 모드 -->
+        <div id="view-mode">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+            <span style="font-size: 13px; color: var(--text-light);">🔒 보기 전용 · 총무만 수정 가능</span>
+            <button onclick="unlockEdit()" style="padding: 8px 14px; border: none; background: var(--primary); color: white; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;">✏️ 수정하기</button>
+          </div>
+        </div>
+        <!-- 비밀번호 입력 -->
+        <div id="pw-mode" style="display: none;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <input type="password" id="edit-pw" inputmode="numeric" placeholder="수정 비밀번호" style="flex: 1; min-width: 0; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; outline: none;">
+            <button onclick="checkPw()" style="padding: 9px 14px; border: none; background: var(--primary); color: white; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;">확인</button>
+            <button onclick="cancelEdit()" style="padding: 9px 12px; border: 1.5px solid var(--border); background: var(--card); color: var(--text-light); border-radius: 8px; font-size: 13px; cursor: pointer;">취소</button>
+          </div>
+          <p id="pw-error" style="font-size: 12px; color: #ef4444; margin: 0.5rem 0 0; display: none;">비밀번호가 틀렸습니다</p>
+        </div>
+        <!-- 수정 모드 (저장) -->
+        <div id="save-mode" style="display: none;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+            <span style="font-size: 13px; color: var(--primary); font-weight: 600;">✏️ 수정 모드 · 변경 후 저장하세요</span>
+            <button onclick="saveToCloud()" id="save-btn" style="padding: 8px 16px; border: none; background: #10b981; color: white; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap;">💾 저장</button>
+          </div>
+        </div>
       </div>
 
       <div id="budget-container"></div>
@@ -707,7 +734,7 @@
         <span id="grand-total" style="font-weight: 800; font-size: 22px; color: #a16207;">₩0</span>
       </div>
 
-      <p style="font-size: 12px; color: var(--text-light); margin-top: 1rem; text-align: center;">💡 입력한 금액은 이 기기(브라우저)에만 저장됩니다</p>
+      <p style="font-size: 12px; color: var(--text-light); margin-top: 1rem; text-align: center;">☁️ 모든 친구가 같은 내용을 함께 봅니다 · 수정은 총무만</p>
     </div>
 
     <div class="footer">
@@ -797,7 +824,6 @@
         const saved = localStorage.getItem('myeongwoo_budget_2026_v2');
         if (saved) {
           const savedData = JSON.parse(saved);
-          // 저장된 항목(이름+금액) 전체 복원
           savedData.forEach((g, gi) => {
             if (budgetData[gi]) {
               budgetData[gi].items = g.items;
@@ -807,15 +833,98 @@
       } catch (e) {}
     }
 
-    function saveBudget() {
-      try {
-        const toSave = budgetData.map(g => ({ items: g.items }));
-        localStorage.setItem('myeongwoo_budget_2026_v2', JSON.stringify(toSave));
-      } catch (e) {}
-    }
-
     function formatWon(n) {
       return '₩' + n.toLocaleString('ko-KR');
+    }
+
+    // ===== Supabase 설정 =====
+    const SUPABASE_URL = 'https://jdwrcyfbxeqvecdypwio.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_AdTP4rFVtxGHmu8TSWwgRw_sjZjgEKN';
+    const EDIT_PASSWORD = '0000';
+    let isEditMode = false;
+
+    // Supabase REST API 헤더
+    const sbHeaders = {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json'
+    };
+
+    // 클라우드에서 데이터 불러오기
+    async function loadFromCloud() {
+      const status = document.getElementById('budget-status');
+      try {
+        const res = await fetch(SUPABASE_URL + '/rest/v1/busan_budget?id=eq.1&select=data', { headers: sbHeaders });
+        const rows = await res.json();
+        if (rows && rows.length && rows[0].data && rows[0].data.length) {
+          // 클라우드에 저장된 데이터가 있으면 적용
+          rows[0].data.forEach((g, gi) => {
+            if (budgetData[gi]) budgetData[gi].items = g.items;
+          });
+          if (status) status.textContent = '☁️ 최신 정산 내역 (모두 공유)';
+        } else {
+          if (status) status.textContent = '☁️ 기본 내역 표시 중 (아직 저장 안 됨)';
+        }
+      } catch (e) {
+        if (status) status.textContent = '⚠️ 클라우드 연결 실패 — 기본 내역 표시';
+      }
+      renderBudget();
+    }
+
+    // 클라우드에 저장
+    async function saveToCloud() {
+      const btn = document.getElementById('save-btn');
+      btn.textContent = '저장 중...';
+      btn.disabled = true;
+      try {
+        const payload = { data: budgetData.map(g => ({ items: g.items })) };
+        const res = await fetch(SUPABASE_URL + '/rest/v1/busan_budget?id=eq.1', {
+          method: 'PATCH',
+          headers: sbHeaders,
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+          btn.textContent = '✅ 저장됨';
+          const status = document.getElementById('budget-status');
+          if (status) status.textContent = '☁️ 저장 완료 · 모두에게 공유됨';
+          setTimeout(() => { btn.textContent = '💾 저장'; btn.disabled = false; }, 1500);
+        } else {
+          throw new Error('save failed');
+        }
+      } catch (e) {
+        btn.textContent = '❌ 실패';
+        setTimeout(() => { btn.textContent = '💾 저장'; btn.disabled = false; }, 1500);
+        alert('저장에 실패했습니다. 인터넷 연결을 확인해주세요.');
+      }
+    }
+
+    // 수정 모드 전환
+    function unlockEdit() {
+      document.getElementById('view-mode').style.display = 'none';
+      document.getElementById('pw-mode').style.display = 'block';
+      document.getElementById('save-mode').style.display = 'none';
+      document.getElementById('edit-pw').focus();
+    }
+    function cancelEdit() {
+      document.getElementById('view-mode').style.display = 'block';
+      document.getElementById('pw-mode').style.display = 'none';
+      document.getElementById('save-mode').style.display = 'none';
+      document.getElementById('edit-pw').value = '';
+      document.getElementById('pw-error').style.display = 'none';
+    }
+    function checkPw() {
+      const pw = document.getElementById('edit-pw').value;
+      if (pw === EDIT_PASSWORD) {
+        isEditMode = true;
+        document.getElementById('view-mode').style.display = 'none';
+        document.getElementById('pw-mode').style.display = 'none';
+        document.getElementById('save-mode').style.display = 'block';
+        document.getElementById('edit-pw').value = '';
+        document.getElementById('pw-error').style.display = 'none';
+        renderBudget();
+      } else {
+        document.getElementById('pw-error').style.display = 'block';
+      }
     }
 
     function renderBudget() {
@@ -829,23 +938,31 @@
           '<span id="subtotal-' + gi + '" style="font-weight: 700; font-size: 14px; color: var(--text-light);">' + formatWon(subtotal) + '</span>' +
           '</div>';
         group.items.forEach((item, ii) => {
-          html += '<div style="display: flex; align-items: center; gap: 6px; padding: 0.4rem 0;">' +
-            '<input type="text" value="' + (item.name || '').replace(/"/g, '&quot;') + '" placeholder="항목명" ' +
-            'onchange="updateName(' + gi + ',' + ii + ', this.value)" ' +
-            'style="flex: 1; min-width: 0; border: 1.5px solid transparent; background: transparent; font-size: 14px; color: var(--text); outline: none; padding: 4px 6px; border-radius: 6px;" ' +
-            'onfocus="this.style.borderColor=\'var(--border)\'; this.style.background=\'var(--bg)\';" ' +
-            'onblur="this.style.borderColor=\'transparent\'; this.style.background=\'transparent\';">' +
-            '<div style="display: flex; align-items: center; gap: 2px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; padding: 4px 8px;">' +
-            '<span style="font-size: 13px; color: var(--text-light);">₩</span>' +
-            '<input type="number" inputmode="numeric" value="' + (item.amount || '') + '" placeholder="0" ' +
-            'onchange="updateAmount(' + gi + ',' + ii + ', this.value)" ' +
-            'style="width: 78px; border: none; background: transparent; text-align: right; font-size: 14px; font-weight: 600; color: var(--text); outline: none;">' +
-            '</div>' +
-            '<button onclick="deleteItem(' + gi + ',' + ii + ')" style="flex-shrink: 0; width: 26px; height: 26px; border: none; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 6px; font-size: 16px; cursor: pointer; line-height: 1; display: flex; align-items: center; justify-content: center;">×</button>' +
-            '</div>';
+          if (isEditMode) {
+            // 수정 모드: 입력 가능
+            html += '<div style="display: flex; align-items: center; gap: 6px; padding: 0.4rem 0;">' +
+              '<input type="text" value="' + (item.name || '').replace(/"/g, '&quot;') + '" placeholder="항목명" ' +
+              'onchange="updateName(' + gi + ',' + ii + ', this.value)" ' +
+              'style="flex: 1; min-width: 0; border: 1.5px solid var(--border); background: var(--bg); font-size: 14px; color: var(--text); outline: none; padding: 6px 8px; border-radius: 6px;">' +
+              '<div style="display: flex; align-items: center; gap: 2px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; padding: 4px 8px;">' +
+              '<span style="font-size: 13px; color: var(--text-light);">₩</span>' +
+              '<input type="number" inputmode="numeric" value="' + (item.amount || '') + '" placeholder="0" ' +
+              'onchange="updateAmount(' + gi + ',' + ii + ', this.value)" ' +
+              'style="width: 78px; border: none; background: transparent; text-align: right; font-size: 14px; font-weight: 600; color: var(--text); outline: none;">' +
+              '</div>' +
+              '<button onclick="deleteItem(' + gi + ',' + ii + ')" style="flex-shrink: 0; width: 26px; height: 26px; border: none; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 6px; font-size: 16px; cursor: pointer; line-height: 1; display: flex; align-items: center; justify-content: center;">×</button>' +
+              '</div>';
+          } else {
+            // 보기 모드: 읽기 전용
+            html += '<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.04);">' +
+              '<span style="flex: 1; font-size: 14px; color: var(--text);">' + (item.name || '-') + '</span>' +
+              '<span style="font-size: 14px; font-weight: 600; color: var(--text);">' + (item.amount ? formatWon(item.amount) : '<span style=\'color:var(--text-light);font-weight:400;\'>미정</span>') + '</span>' +
+              '</div>';
+          }
         });
-        // 항목 추가 버튼
-        html += '<button onclick="addItem(' + gi + ')" style="margin-top: 0.5rem; width: 100%; padding: 8px; border: 1.5px dashed ' + group.color + '; background: transparent; color: ' + group.color + '; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">+ 항목 추가</button>';
+        if (isEditMode) {
+          html += '<button onclick="addItem(' + gi + ')" style="margin-top: 0.5rem; width: 100%; padding: 8px; border: 1.5px dashed ' + group.color + '; background: transparent; color: ' + group.color + '; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">+ 항목 추가</button>';
+        }
         html += '</div>';
       });
       container.innerHTML = html;
@@ -854,20 +971,16 @@
 
     function updateName(gi, ii, value) {
       budgetData[gi].items[ii].name = value;
-      saveBudget();
     }
 
     function deleteItem(gi, ii) {
       budgetData[gi].items.splice(ii, 1);
       renderBudget();
-      saveBudget();
     }
 
     function addItem(gi) {
       budgetData[gi].items.push({ name: '', amount: 0 });
       renderBudget();
-      saveBudget();
-      // 새로 추가된 항목명 입력란에 포커스
       setTimeout(() => {
         const inputs = document.querySelectorAll('#budget-container input[type="text"]');
         if (inputs.length) inputs[inputs.length - 1].focus();
@@ -877,7 +990,6 @@
     function updateAmount(gi, ii, value) {
       budgetData[gi].items[ii].amount = parseInt(value) || 0;
       updateTotals();
-      saveBudget();
     }
 
     function updateTotals() {
@@ -892,8 +1004,7 @@
       if (grandEl) grandEl.textContent = formatWon(grand);
     }
 
-    loadBudget();
-    renderBudget();
+    loadFromCloud();
 
     // ===== 디데이 카운트다운 =====
     function updateCountdown() {
