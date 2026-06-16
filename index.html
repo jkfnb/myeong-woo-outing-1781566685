@@ -366,6 +366,7 @@
     <!-- 날씨 위젯 -->
     <div style="background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.04);">
       <p style="font-size: 13px; font-weight: 700; color: var(--primary); margin: 0 0 1rem; letter-spacing: 0.5px;">🌤️ 부산 여행 기간 날씨</p>
+      <div id="weather-compare" style="display: none; background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(236,72,153,0.08)); border-radius: 10px; padding: 0.9rem 1rem; margin-bottom: 1rem; font-size: 13px; line-height: 1.5; color: var(--text);"></div>
       <div id="weather-display" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
         <div style="text-align: center; color: var(--text-light); font-size: 13px; grid-column: 1 / -1; padding: 1rem;">날씨 정보를 불러오는 중...</div>
       </div>
@@ -1164,6 +1165,58 @@
       }
     }
     loadWeather();
+
+    // ===== 오늘 부산 vs 이천 날씨 비교 =====
+    async function compareToday() {
+      const box = document.getElementById('weather-compare');
+      // 부산 남포동 / 경기 이천
+      const busan = 'latitude=35.0981&longitude=129.0266';
+      const icheon = 'latitude=37.2720&longitude=127.4350';
+      const params = '&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FSeoul&forecast_days=1';
+
+      const wdesc = {
+        0: '맑음', 1: '대체로 맑음', 2: '구름 조금', 3: '흐림',
+        45: '안개', 48: '안개', 51: '이슬비', 53: '이슬비', 55: '이슬비',
+        61: '비', 63: '비', 65: '강한 비', 80: '소나기', 81: '소나기', 82: '강한 소나기',
+        95: '천둥번개', 96: '천둥번개', 99: '천둥번개'
+      };
+
+      try {
+        const [bRes, iRes] = await Promise.all([
+          fetch('https://api.open-meteo.com/v1/forecast?' + busan + params),
+          fetch('https://api.open-meteo.com/v1/forecast?' + icheon + params)
+        ]);
+        const b = await bRes.json();
+        const i = await iRes.json();
+
+        const bTemp = Math.round(b.current.temperature_2m);
+        const iTemp = Math.round(i.current.temperature_2m);
+        const bMax = Math.round(b.daily.temperature_2m_max[0]);
+        const bRain = b.daily.precipitation_probability_max[0];
+        const bDesc = wdesc[b.current.weather_code] || '';
+        const diff = bTemp - iTemp;
+
+        let compareText;
+        if (diff > 1) {
+          compareText = '부산이 이천보다 <b>' + Math.abs(diff) + '℃ 더 따뜻</b>해요';
+        } else if (diff < -1) {
+          compareText = '부산이 이천보다 <b>' + Math.abs(diff) + '℃ 더 선선</b>해요';
+        } else {
+          compareText = '부산과 이천 기온이 <b>비슷</b>해요';
+        }
+
+        let rainText = '';
+        if (bRain >= 60) rainText = ' · ☔ 우산 챙기세요';
+        else if (bRain >= 30) rainText = ' · 🌂 비 올 수도';
+
+        box.innerHTML = '🌡️ <b>오늘 부산</b> ' + bTemp + '℃ (' + bDesc + ', 최고 ' + bMax + '℃) · 이천 ' + iTemp + '℃<br>' +
+          '👉 ' + compareText + rainText;
+        box.style.display = 'block';
+      } catch (e) {
+        // 비교 실패 시 그냥 숨김
+      }
+    }
+    compareToday();
   </script>
 </body>
 </html>
