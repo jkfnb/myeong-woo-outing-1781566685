@@ -380,7 +380,6 @@
         <button class="tab-btn" onclick="switchDay(2, this)">📅 2일차</button>
         <button class="tab-btn" onclick="switchDay(3, this)">📅 3일차</button>
         <button class="tab-btn" onclick="showBudget(this)" style="background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; border-color: #f59e0b;">💰 정산</button>
-        <button class="tab-btn" onclick="showSeats(this)" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border-color: #6366f1;">🎲 자리뽑기</button>
         <button class="tab-btn" onclick="showRoute(this)" style="background: linear-gradient(135deg, #10b981, #34d399); color: white; border-color: #10b981;">🗺️ 동선</button>
       </div>
     </div>
@@ -741,61 +740,6 @@
       <p style="font-size: 12px; color: var(--text-light); margin-top: 1rem; text-align: center;">☁️ 모든 친구가 같은 내용을 함께 봅니다 · 수정은 총무만</p>
     </div>
 
-    <!-- 자리뽑기 화면 -->
-    <div class="content" id="seats-view" style="display: none;">
-      <div style="background: linear-gradient(135deg, rgba(99,102,241,0.12) 0%, rgba(139,92,246,0.12) 100%); border-left: 5px solid #6366f1; border-radius: 12px; padding: 1.3rem; margin-bottom: 1.5rem;">
-        <p style="font-size: 12px; color: #6366f1; margin: 0 0 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">🎲 차량 자리뽑기</p>
-        <h3 style="font-size: 22px; font-weight: 800; color: var(--text); margin: 0;">오늘 누구 옆에 앉을까?</h3>
-        <p style="font-size: 12px; color: var(--text-light); margin: 0.6rem 0 0;">🚐 7인승 카니발 · 운전석은 종근님 고정</p>
-      </div>
-
-      <!-- 차량 좌석도 -->
-      <div style="background: var(--card); border: 2px solid var(--border); border-radius: 20px; padding: 1.5rem 1.2rem; margin-bottom: 1.5rem;">
-        <p style="text-align: center; font-size: 12px; color: var(--text-light); margin: 0 0 1rem; font-weight: 600;">⬆️ 차량 앞쪽 ⬆️</p>
-
-        <!-- 1열 -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-          <div class="seat" id="seat-0" style="background: linear-gradient(135deg, #0ea5e9, #38bdf8); border-radius: 14px; padding: 1rem 0.5rem; text-align: center; color: white; min-height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div style="font-size: 11px; opacity: 0.9; margin-bottom: 3px;">🚙 운전석</div>
-            <div style="font-size: 17px; font-weight: 800;">종근</div>
-          </div>
-          <div class="seat" id="seat-1" style="background: var(--bg); border: 2px dashed var(--border); border-radius: 14px; padding: 1rem 0.5rem; text-align: center; min-height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div style="font-size: 11px; color: var(--text-light); margin-bottom: 3px;">조수석</div>
-            <div style="font-size: 17px; font-weight: 800; color: var(--text-light);">?</div>
-          </div>
-        </div>
-
-        <!-- 2열 -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-          <div class="seat" id="seat-2" style="background: var(--bg); border: 2px dashed var(--border); border-radius: 14px; padding: 1rem 0.5rem; text-align: center; min-height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div style="font-size: 11px; color: var(--text-light); margin-bottom: 3px;">2열 좌</div>
-            <div style="font-size: 17px; font-weight: 800; color: var(--text-light);">?</div>
-          </div>
-          <div class="seat" id="seat-3" style="background: var(--bg); border: 2px dashed var(--border); border-radius: 14px; padding: 1rem 0.5rem; text-align: center; min-height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div style="font-size: 11px; color: var(--text-light); margin-bottom: 3px;">2열 우</div>
-            <div style="font-size: 17px; font-weight: 800; color: var(--text-light);">?</div>
-          </div>
-        </div>
-
-        <!-- 3열 -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-          <div class="seat" id="seat-4" style="background: var(--bg); border: 2px dashed var(--border); border-radius: 14px; padding: 1rem 0.5rem; text-align: center; min-height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div style="font-size: 11px; color: var(--text-light); margin-bottom: 3px;">3열 좌</div>
-            <div style="font-size: 17px; font-weight: 800; color: var(--text-light);">?</div>
-          </div>
-          <div class="seat" id="seat-5" style="background: var(--bg); border: 2px dashed var(--border); border-radius: 14px; padding: 1rem 0.5rem; text-align: center; min-height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div style="font-size: 11px; color: var(--text-light); margin-bottom: 3px;">3열 우</div>
-            <div style="font-size: 17px; font-weight: 800; color: var(--text-light);">?</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 뽑기 버튼 -->
-      <button onclick="rollSeats()" id="roll-btn" style="width: 100%; padding: 1.1rem; border: none; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border-radius: 14px; font-size: 17px; font-weight: 800; cursor: pointer; box-shadow: 0 6px 20px rgba(99,102,241,0.3);">🎲 자리 뽑기!</button>
-
-      <p style="font-size: 12px; color: var(--text-light); margin-top: 1rem; text-align: center;">🎯 버튼을 누르면 종근님 빼고 랜덤으로 자리가 정해져요</p>
-    </div>
-
     <!-- 동선 화면 -->
     <div class="content" id="route-view" style="display: none;">
       <div style="background: linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(52,211,153,0.12) 100%); border-left: 5px solid #10b981; border-radius: 12px; padding: 1.3rem; margin-bottom: 1.5rem;">
@@ -807,67 +751,58 @@
       <!-- 1일차 -->
       <div style="background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; padding: 1.2rem; margin-bottom: 1.2rem;">
         <h4 style="font-size: 15px; font-weight: 800; color: #6366f1; margin: 0 0 0.3rem;">1️⃣ 1일차 (금) · 도보권</h4>
-        <p style="font-size: 12px; color: var(--text-light); margin: 0 0 0.8rem;">숙소 체크인 → 김해식당 저녁 (도보 5분)</p>
-        <svg viewBox="0 0 320 140" style="width: 100%; height: auto; background: #f0f7f4; border-radius: 12px;">
-          <line x1="80" y1="70" x2="240" y2="70" stroke="#6366f1" stroke-width="3" stroke-dasharray="6 5"/>
-          <circle cx="80" cy="70" r="10" fill="#0ea5e9"/>
-          <text x="80" y="74" text-anchor="middle" font-size="11" fill="white" font-weight="bold">🏨</text>
-          <text x="80" y="100" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="bold">숙소 16:00</text>
-          <circle cx="240" cy="70" r="10" fill="#f59e0b"/>
-          <text x="240" y="74" text-anchor="middle" font-size="10" fill="white" font-weight="bold">🦑</text>
-          <text x="240" y="100" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="bold">김해식당 18:00</text>
-          <text x="160" y="60" text-anchor="middle" font-size="10" fill="#6366f1" font-weight="bold">도보 5분</text>
-        </svg>
+        <p style="font-size: 12px; color: var(--text-light); margin: 0 0 0.8rem;">🏨 숙소 16:00 → 🦑 김해식당 18:00</p>
+        <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=129.0240%2C35.0950%2C129.0320%2C35.1010&amp;layer=mapnik&amp;marker=35.0981%2C129.0267" style="width:100%; height:220px; border:0; border-radius:12px;" loading="lazy"></iframe>
+        <div style="display: flex; align-items: center; gap: 8px; margin-top: 0.7rem; font-size: 13px;">
+          <span style="background: rgba(99,102,241,0.1); color: #6366f1; padding: 4px 10px; border-radius: 20px; font-weight: 700;">🚶 도보 5분</span>
+          <span style="color: var(--text-light);">숙소 → 김해식당 (자갈치 근처)</span>
+        </div>
+        <a href="https://map.naver.com/p/directions/-/-/-/walk?c=129.0293,35.0977,15,0,0,0,dh" target="_blank" style="display: block; text-align: center; margin-top: 0.8rem; padding: 9px; background: #10b981; color: white; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none;">🧭 네이버 길찾기</a>
       </div>
 
       <!-- 2일차 -->
       <div style="background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; padding: 1.2rem; margin-bottom: 1.2rem;">
         <h4 style="font-size: 15px; font-weight: 800; color: #ec4899; margin: 0 0 0.3rem;">2️⃣ 2일차 (토) · 차량 이동 🚐</h4>
-        <p style="font-size: 12px; color: var(--text-light); margin: 0 0 0.8rem;">아침→BEXCO→점심→레이저태그→저녁 · 가장 바쁜 날</p>
-        <svg viewBox="0 0 320 360" style="width: 100%; height: auto; background: #f0f7f4; border-radius: 12px;">
-          <!-- 동선 경로: 한약방국밥→BEXCO→그집곱도리탕→영도다리횟집 -->
-          <polyline points="125.6,154.2 257.2,74.4 83.6,247.6 74.2,285.6" fill="none" stroke="#ec4899" stroke-width="3" stroke-dasharray="7 5"/>
-          <!-- 숙소 (참고용) -->
-          <circle cx="62.8" cy="283.2" r="7" fill="#cbd5e1"/>
-          <text x="62.8" y="305" text-anchor="middle" font-size="9" fill="#64748b">숙소</text>
-          <!-- 1 한약방국밥 -->
-          <circle cx="125.6" cy="154.2" r="11" fill="#10b981"/>
-          <text x="125.6" y="158" text-anchor="middle" font-size="11" fill="white" font-weight="bold">1</text>
-          <text x="125.6" y="135" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="bold">한약방국밥 10시</text>
-          <!-- 2 BEXCO -->
-          <circle cx="257.2" cy="74.4" r="11" fill="#3b82f6"/>
-          <text x="257.2" y="78" text-anchor="middle" font-size="11" fill="white" font-weight="bold">2</text>
-          <text x="257.2" y="55" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="bold">BEXCO 11시</text>
-          <!-- 3 그집곱도리탕 -->
-          <circle cx="83.6" cy="247.6" r="11" fill="#f59e0b"/>
-          <text x="83.6" y="251" text-anchor="middle" font-size="11" fill="white" font-weight="bold">3</text>
-          <text x="155" y="237" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="bold">그집곱도리탕 13:30</text>
-          <!-- 4 영도다리횟집 -->
-          <circle cx="74.2" cy="285.6" r="11" fill="#d4537e"/>
-          <text x="74.2" y="289" text-anchor="middle" font-size="11" fill="white" font-weight="bold">4</text>
-          <text x="150" y="290" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="bold">영도다리횟집 18시</text>
-        </svg>
-        <p style="font-size: 11px; color: var(--text-light); margin: 0.6rem 0 0; text-align: center;">1️⃣국밥 → 2️⃣BEXCO(해운대) → 3️⃣곱도리탕(부산역) → 4️⃣하모(자갈치)</p>
+        <p style="font-size: 12px; color: var(--text-light); margin: 0 0 0.8rem;">남포동~해운대~부산역을 크게 도는 날</p>
+        <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=129.0150%2C35.0850%2C129.1500%2C35.1800&amp;layer=mapnik" style="width:100%; height:280px; border:0; border-radius:12px;" loading="lazy"></iframe>
+        <!-- 구간별 이동시간 -->
+        <div style="margin-top: 0.9rem; display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+            <span style="background: #10b981; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0;">1</span>
+            <span style="flex: 1; color: var(--text);">한약방국밥 (아침 10시)</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-light); padding-left: 28px;">↓ 🚗 약 30분</div>
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+            <span style="background: #3b82f6; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0;">2</span>
+            <span style="flex: 1; color: var(--text);">BEXCO 모빌리티쇼 (11시)</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-light); padding-left: 28px;">↓ 🚗 약 30분</div>
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+            <span style="background: #f59e0b; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0;">3</span>
+            <span style="flex: 1; color: var(--text);">그집곱도리탕 (점심 13:30)</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-light); padding-left: 28px;">↓ 🚗 약 15분 (레이저태그 후)</div>
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+            <span style="background: #d4537e; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0;">4</span>
+            <span style="flex: 1; color: var(--text);">영도다리횟집 (저녁 18시)</span>
+          </div>
+        </div>
+        <a href="https://map.naver.com/p/search/부산모빌리티쇼" target="_blank" style="display: block; text-align: center; margin-top: 0.9rem; padding: 9px; background: #10b981; color: white; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none;">🧭 네이버 지도에서 보기</a>
       </div>
 
       <!-- 3일차 -->
       <div style="background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; padding: 1.2rem; margin-bottom: 1rem;">
         <h4 style="font-size: 15px; font-weight: 800; color: #0ea5e9; margin: 0 0 0.3rem;">3️⃣ 3일차 (일) · 도보권</h4>
-        <p style="font-size: 12px; color: var(--text-light); margin: 0 0 0.8rem;">기상 → 오복식당 아침 → 출발 (도보 2분)</p>
-        <svg viewBox="0 0 320 140" style="width: 100%; height: auto; background: #f0f7f4; border-radius: 12px;">
-          <line x1="90" y1="70" x2="230" y2="70" stroke="#0ea5e9" stroke-width="3" stroke-dasharray="6 5"/>
-          <circle cx="90" cy="70" r="10" fill="#0ea5e9"/>
-          <text x="90" y="74" text-anchor="middle" font-size="11" fill="white" font-weight="bold">🏨</text>
-          <text x="90" y="100" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="bold">숙소 기상</text>
-          <circle cx="230" cy="70" r="10" fill="#10b981"/>
-          <text x="230" y="74" text-anchor="middle" font-size="10" fill="white" font-weight="bold">🐟</text>
-          <text x="230" y="100" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="bold">오복식당 11시</text>
-          <text x="160" y="60" text-anchor="middle" font-size="10" fill="#0ea5e9" font-weight="bold">도보 2분</text>
-        </svg>
-        <p style="font-size: 11px; color: var(--text-light); margin: 0.6rem 0 0; text-align: center;">아침 먹고 12시 이천으로 출발 🚗</p>
+        <p style="font-size: 12px; color: var(--text-light); margin: 0 0 0.8rem;">🏨 숙소 기상 → 🐟 오복식당 11시 → 출발</p>
+        <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=129.0240%2C35.0945%2C129.0300%2C35.1005&amp;layer=mapnik&amp;marker=35.0969%2C129.0270" style="width:100%; height:220px; border:0; border-radius:12px;" loading="lazy"></iframe>
+        <div style="display: flex; align-items: center; gap: 8px; margin-top: 0.7rem; font-size: 13px;">
+          <span style="background: rgba(14,165,233,0.1); color: #0ea5e9; padding: 4px 10px; border-radius: 20px; font-weight: 700;">🚶 도보 2분</span>
+          <span style="color: var(--text-light);">숙소 → 오복식당, 12시 출발</span>
+        </div>
+        <a href="https://map.naver.com/p/search/오복식당 자갈치" target="_blank" style="display: block; text-align: center; margin-top: 0.8rem; padding: 9px; background: #10b981; color: white; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none;">🧭 네이버 길찾기</a>
       </div>
 
-      <p style="font-size: 12px; color: var(--text-light); margin-top: 1rem; text-align: center;">💡 위치·거리는 이해를 돕기 위한 대략적 표현이에요</p>
+      <p style="font-size: 12px; color: var(--text-light); margin-top: 1rem; text-align: center;">💡 이동시간은 평소 교통 기준 대략값이에요 · 지도는 손가락으로 움직일 수 있어요</p>
     </div>
 
     <div class="footer">
@@ -882,7 +817,6 @@
       // 지출 화면 숨기고 일정 화면 보이기
       document.getElementById('schedule-view').style.display = 'block';
       document.getElementById('budget-view').style.display = 'none';
-      document.getElementById('seats-view').style.display = 'none';
       document.getElementById('route-view').style.display = 'none';
 
       // 모든 day-section 숨기기
@@ -904,19 +838,6 @@
     function showBudget(button) {
       document.getElementById('schedule-view').style.display = 'none';
       document.getElementById('budget-view').style.display = 'block';
-      document.getElementById('seats-view').style.display = 'none';
-      document.getElementById('route-view').style.display = 'none';
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      button.classList.add('active');
-    }
-
-    // ===== 자리뽑기 =====
-    function showSeats(button) {
-      document.getElementById('schedule-view').style.display = 'none';
-      document.getElementById('budget-view').style.display = 'none';
-      document.getElementById('seats-view').style.display = 'block';
       document.getElementById('route-view').style.display = 'none';
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('active');
@@ -928,76 +849,11 @@
     function showRoute(button) {
       document.getElementById('schedule-view').style.display = 'none';
       document.getElementById('budget-view').style.display = 'none';
-      document.getElementById('seats-view').style.display = 'none';
       document.getElementById('route-view').style.display = 'block';
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('active');
       });
       button.classList.add('active');
-    }
-
-    // 자리뽑기 대상 (종근=운전석 고정 제외)
-    const seatMembers = ['명수', '대근', '의준', '요한', '종록'];
-    const seatLabels = ['조수석', '2열 좌', '2열 우', '3열 좌', '3열 우'];
-    let rolling = false;
-
-    function setSeat(idx, name, fixed) {
-      const seat = document.getElementById('seat-' + idx);
-      if (!seat) return;
-      const label = seatLabels[idx - 1] || '';
-      if (name) {
-        seat.style.background = 'linear-gradient(135deg, #6366f1, #8b5cf6)';
-        seat.style.border = 'none';
-        seat.innerHTML = '<div style="font-size: 11px; opacity: 0.9; margin-bottom: 3px; color: white;">' + label + '</div>' +
-          '<div style="font-size: 17px; font-weight: 800; color: white;">' + name + '</div>';
-      } else {
-        seat.style.background = 'var(--bg)';
-        seat.style.border = '2px dashed var(--border)';
-        seat.innerHTML = '<div style="font-size: 11px; color: var(--text-light); margin-bottom: 3px;">' + label + '</div>' +
-          '<div style="font-size: 17px; font-weight: 800; color: var(--text-light);">?</div>';
-      }
-    }
-
-    function shuffle(arr) {
-      const a = arr.slice();
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    }
-
-    function rollSeats() {
-      if (rolling) return;
-      rolling = true;
-      const btn = document.getElementById('roll-btn');
-      btn.textContent = '🎲 굴리는 중...';
-      btn.disabled = true;
-
-      // 룰렛 애니메이션: 빠르게 이름이 바뀌다가 멈춤
-      let ticks = 0;
-      const maxTicks = 18;
-      const interval = setInterval(() => {
-        const temp = shuffle(seatMembers);
-        for (let s = 1; s <= 5; s++) setSeat(s, temp[s - 1]);
-        ticks++;
-        if (ticks >= maxTicks) {
-          clearInterval(interval);
-          // 최종 결과
-          const finalOrder = shuffle(seatMembers);
-          for (let s = 1; s <= 5; s++) setSeat(s, finalOrder[s - 1]);
-          btn.textContent = '🎲 다시 뽑기!';
-          btn.disabled = false;
-          rolling = false;
-          // 살짝 통통 튀는 효과
-          for (let s = 1; s <= 5; s++) {
-            const seat = document.getElementById('seat-' + s);
-            seat.style.transition = 'transform 0.2s';
-            seat.style.transform = 'scale(1.06)';
-            setTimeout(() => { seat.style.transform = 'scale(1)'; }, 200);
-          }
-        }
-      }, 80);
     }
 
     // 지출 항목 기본 데이터 (이미지 기준)
