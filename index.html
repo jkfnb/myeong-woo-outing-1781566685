@@ -380,6 +380,7 @@
         <button class="tab-btn" onclick="switchDay(2, this)">📅 2일차</button>
         <button class="tab-btn" onclick="switchDay(3, this)">📅 3일차</button>
         <button class="tab-btn" onclick="showBudget(this)" style="background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; border-color: #f59e0b;">💰 정산</button>
+        <button class="tab-btn" onclick="showSeats(this)" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border-color: #6366f1;">🎲 자리뽑기</button>
       </div>
     </div>
 
@@ -739,6 +740,61 @@
       <p style="font-size: 12px; color: var(--text-light); margin-top: 1rem; text-align: center;">☁️ 모든 친구가 같은 내용을 함께 봅니다 · 수정은 총무만</p>
     </div>
 
+    <!-- 자리뽑기 화면 -->
+    <div class="content" id="seats-view" style="display: none;">
+      <div style="background: linear-gradient(135deg, rgba(99,102,241,0.12) 0%, rgba(139,92,246,0.12) 100%); border-left: 5px solid #6366f1; border-radius: 12px; padding: 1.3rem; margin-bottom: 1.5rem;">
+        <p style="font-size: 12px; color: #6366f1; margin: 0 0 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">🎲 차량 자리뽑기</p>
+        <h3 style="font-size: 22px; font-weight: 800; color: var(--text); margin: 0;">오늘 누구 옆에 앉을까?</h3>
+        <p style="font-size: 12px; color: var(--text-light); margin: 0.6rem 0 0;">🚐 7인승 카니발 · 운전석은 종근님 고정</p>
+      </div>
+
+      <!-- 차량 좌석도 -->
+      <div style="background: var(--card); border: 2px solid var(--border); border-radius: 20px; padding: 1.5rem 1.2rem; margin-bottom: 1.5rem;">
+        <p style="text-align: center; font-size: 12px; color: var(--text-light); margin: 0 0 1rem; font-weight: 600;">⬆️ 차량 앞쪽 ⬆️</p>
+
+        <!-- 1열 -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div class="seat" id="seat-0" style="background: linear-gradient(135deg, #0ea5e9, #38bdf8); border-radius: 14px; padding: 1rem 0.5rem; text-align: center; color: white; min-height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="font-size: 11px; opacity: 0.9; margin-bottom: 3px;">🚙 운전석</div>
+            <div style="font-size: 17px; font-weight: 800;">종근</div>
+          </div>
+          <div class="seat" id="seat-1" style="background: var(--bg); border: 2px dashed var(--border); border-radius: 14px; padding: 1rem 0.5rem; text-align: center; min-height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="font-size: 11px; color: var(--text-light); margin-bottom: 3px;">조수석</div>
+            <div style="font-size: 17px; font-weight: 800; color: var(--text-light);">?</div>
+          </div>
+        </div>
+
+        <!-- 2열 -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div class="seat" id="seat-2" style="background: var(--bg); border: 2px dashed var(--border); border-radius: 14px; padding: 1rem 0.5rem; text-align: center; min-height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="font-size: 11px; color: var(--text-light); margin-bottom: 3px;">2열 좌</div>
+            <div style="font-size: 17px; font-weight: 800; color: var(--text-light);">?</div>
+          </div>
+          <div class="seat" id="seat-3" style="background: var(--bg); border: 2px dashed var(--border); border-radius: 14px; padding: 1rem 0.5rem; text-align: center; min-height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="font-size: 11px; color: var(--text-light); margin-bottom: 3px;">2열 우</div>
+            <div style="font-size: 17px; font-weight: 800; color: var(--text-light);">?</div>
+          </div>
+        </div>
+
+        <!-- 3열 -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="seat" id="seat-4" style="background: var(--bg); border: 2px dashed var(--border); border-radius: 14px; padding: 1rem 0.5rem; text-align: center; min-height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="font-size: 11px; color: var(--text-light); margin-bottom: 3px;">3열 좌</div>
+            <div style="font-size: 17px; font-weight: 800; color: var(--text-light);">?</div>
+          </div>
+          <div class="seat" id="seat-5" style="background: var(--bg); border: 2px dashed var(--border); border-radius: 14px; padding: 1rem 0.5rem; text-align: center; min-height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="font-size: 11px; color: var(--text-light); margin-bottom: 3px;">3열 우</div>
+            <div style="font-size: 17px; font-weight: 800; color: var(--text-light);">?</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 뽑기 버튼 -->
+      <button onclick="rollSeats()" id="roll-btn" style="width: 100%; padding: 1.1rem; border: none; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border-radius: 14px; font-size: 17px; font-weight: 800; cursor: pointer; box-shadow: 0 6px 20px rgba(99,102,241,0.3);">🎲 자리 뽑기!</button>
+
+      <p style="font-size: 12px; color: var(--text-light); margin-top: 1rem; text-align: center;">🎯 버튼을 누르면 종근님 빼고 랜덤으로 자리가 정해져요</p>
+    </div>
+
     <div class="footer">
       <p>🚗 즐거운 부산 여행 되세요!</p>
       <p>식사 장소·일정은 상황에 따라 변경될 수 있습니다</p>
@@ -751,6 +807,7 @@
       // 지출 화면 숨기고 일정 화면 보이기
       document.getElementById('schedule-view').style.display = 'block';
       document.getElementById('budget-view').style.display = 'none';
+      document.getElementById('seats-view').style.display = 'none';
 
       // 모든 day-section 숨기기
       document.querySelectorAll('.day-section').forEach(el => {
@@ -771,10 +828,86 @@
     function showBudget(button) {
       document.getElementById('schedule-view').style.display = 'none';
       document.getElementById('budget-view').style.display = 'block';
+      document.getElementById('seats-view').style.display = 'none';
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('active');
       });
       button.classList.add('active');
+    }
+
+    // ===== 자리뽑기 =====
+    function showSeats(button) {
+      document.getElementById('schedule-view').style.display = 'none';
+      document.getElementById('budget-view').style.display = 'none';
+      document.getElementById('seats-view').style.display = 'block';
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      button.classList.add('active');
+    }
+
+    // 자리뽑기 대상 (종근=운전석 고정 제외)
+    const seatMembers = ['명수', '대근', '의준', '요한', '종록'];
+    const seatLabels = ['조수석', '2열 좌', '2열 우', '3열 좌', '3열 우'];
+    let rolling = false;
+
+    function setSeat(idx, name, fixed) {
+      const seat = document.getElementById('seat-' + idx);
+      if (!seat) return;
+      const label = seatLabels[idx - 1] || '';
+      if (name) {
+        seat.style.background = 'linear-gradient(135deg, #6366f1, #8b5cf6)';
+        seat.style.border = 'none';
+        seat.innerHTML = '<div style="font-size: 11px; opacity: 0.9; margin-bottom: 3px; color: white;">' + label + '</div>' +
+          '<div style="font-size: 17px; font-weight: 800; color: white;">' + name + '</div>';
+      } else {
+        seat.style.background = 'var(--bg)';
+        seat.style.border = '2px dashed var(--border)';
+        seat.innerHTML = '<div style="font-size: 11px; color: var(--text-light); margin-bottom: 3px;">' + label + '</div>' +
+          '<div style="font-size: 17px; font-weight: 800; color: var(--text-light);">?</div>';
+      }
+    }
+
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function rollSeats() {
+      if (rolling) return;
+      rolling = true;
+      const btn = document.getElementById('roll-btn');
+      btn.textContent = '🎲 굴리는 중...';
+      btn.disabled = true;
+
+      // 룰렛 애니메이션: 빠르게 이름이 바뀌다가 멈춤
+      let ticks = 0;
+      const maxTicks = 18;
+      const interval = setInterval(() => {
+        const temp = shuffle(seatMembers);
+        for (let s = 1; s <= 5; s++) setSeat(s, temp[s - 1]);
+        ticks++;
+        if (ticks >= maxTicks) {
+          clearInterval(interval);
+          // 최종 결과
+          const finalOrder = shuffle(seatMembers);
+          for (let s = 1; s <= 5; s++) setSeat(s, finalOrder[s - 1]);
+          btn.textContent = '🎲 다시 뽑기!';
+          btn.disabled = false;
+          rolling = false;
+          // 살짝 통통 튀는 효과
+          for (let s = 1; s <= 5; s++) {
+            const seat = document.getElementById('seat-' + s);
+            seat.style.transition = 'transform 0.2s';
+            seat.style.transform = 'scale(1.06)';
+            setTimeout(() => { seat.style.transform = 'scale(1)'; }, 200);
+          }
+        }
+      }, 80);
     }
 
     // 지출 항목 기본 데이터 (이미지 기준)
