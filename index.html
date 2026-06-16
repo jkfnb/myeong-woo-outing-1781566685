@@ -1199,10 +1199,11 @@
         const bAvgMax = Math.round(bMaxArr.reduce((a, c) => a + c, 0) / bMaxArr.length);
         const bMaxRain = Math.max.apply(null, bRainArr);
 
-        // 오늘 이천 최고기온 (없으면 현재기온)
-        const iToday = (i.daily && i.daily.temperature_2m_max) ? Math.round(i.daily.temperature_2m_max[0]) : Math.round(i.current.temperature_2m);
+        // 오늘 이천 최고/최저 기온
+        const iMax = (i.daily && i.daily.temperature_2m_max) ? Math.round(i.daily.temperature_2m_max[0]) : Math.round(i.current.temperature_2m);
+        const iMin = (i.daily && i.daily.temperature_2m_min) ? Math.round(i.daily.temperature_2m_min[0]) : iMax;
 
-        const diff = bAvgMax - iToday;
+        const diff = bAvgMax - iMax;
         let compareText;
         if (diff > 1) {
           compareText = '여행날 부산은 <b>오늘 이천보다 ' + Math.abs(diff) + '℃ 더 더울</b> 것 같아요';
@@ -1216,7 +1217,7 @@
         if (bMaxRain >= 60) rainText = ' · ☔ 우산 챙기세요';
         else if (bMaxRain >= 30) rainText = ' · 🌂 비 올 수도';
 
-        box.innerHTML = '🌡️ 오늘 이천 ' + iToday + '℃ 기준 →<br>👉 ' + compareText + rainText;
+        box.innerHTML = '🏠 오늘 이천 <b>' + iMax + '℃ / ' + iMin + '℃</b> (최고/최저)<br>👉 ' + compareText + rainText;
         box.style.display = 'block';
       } catch (e) {
         // 비교 실패 시 숨김
