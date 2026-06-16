@@ -720,7 +720,7 @@
         <!-- 수정 모드 (저장) -->
         <div id="save-mode" style="display: none;">
           <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-            <span style="font-size: 13px; color: var(--primary); font-weight: 600;">✏️ 수정 모드 · 변경 후 저장하세요</span>
+            <span style="font-size: 13px; color: var(--primary); font-weight: 600;">✏️ 수정 모드 · ⠿ 끌어서 순서 변경</span>
             <button onclick="saveToCloud()" id="save-btn" style="padding: 8px 16px; border: none; background: #10b981; color: white; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap;">💾 저장</button>
           </div>
         </div>
@@ -939,8 +939,9 @@
           '</div>';
         group.items.forEach((item, ii) => {
           if (isEditMode) {
-            // 수정 모드: 입력 가능
-            html += '<div style="display: flex; align-items: center; gap: 6px; padding: 0.4rem 0;">' +
+            // 수정 모드: 입력 가능 + 드래그 핸들
+            html += '<div class="budget-row" data-gi="' + gi + '" data-ii="' + ii + '" style="display: flex; align-items: center; gap: 6px; padding: 0.4rem 0;">' +
+              '<span class="drag-handle" data-gi="' + gi + '" data-ii="' + ii + '" style="flex-shrink: 0; width: 28px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--text-light); font-size: 18px; cursor: grab; touch-action: none; user-select: none;">⠿</span>' +
               '<input type="text" value="' + (item.name || '').replace(/"/g, '&quot;') + '" placeholder="항목명" ' +
               'onchange="updateName(' + gi + ',' + ii + ', this.value)" ' +
               'style="flex: 1; min-width: 0; border: 1.5px solid var(--border); background: var(--bg); font-size: 14px; color: var(--text); outline: none; padding: 6px 8px; border-radius: 6px;">' +
@@ -948,7 +949,7 @@
               '<span style="font-size: 13px; color: var(--text-light);">₩</span>' +
               '<input type="number" inputmode="numeric" value="' + (item.amount || '') + '" placeholder="0" ' +
               'onchange="updateAmount(' + gi + ',' + ii + ', this.value)" ' +
-              'style="width: 78px; border: none; background: transparent; text-align: right; font-size: 14px; font-weight: 600; color: var(--text); outline: none;">' +
+              'style="width: 66px; border: none; background: transparent; text-align: right; font-size: 14px; font-weight: 600; color: var(--text); outline: none;">' +
               '</div>' +
               '<button onclick="deleteItem(' + gi + ',' + ii + ')" style="flex-shrink: 0; width: 26px; height: 26px; border: none; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 6px; font-size: 16px; cursor: pointer; line-height: 1; display: flex; align-items: center; justify-content: center;">×</button>' +
               '</div>';
@@ -967,6 +968,95 @@
       });
       container.innerHTML = html;
       updateTotals();
+      if (isEditMode) setupDrag();
+    }
+
+    // ===== 드래그로 순서 변경 (모바일 터치 지원) =====
+    let dragState = null;
+
+    function setupDrag() {
+      const handles = document.querySelectorAll('#budget-container .drag-handle');
+      handles.forEach(handle => {
+        handle.addEventListener('touchstart', onDragStart, { passive: false });
+        handle.addEventListener('mousedown', onDragStart);
+      });
+    }
+
+    function onDragStart(e) {
+      e.preventDefault();
+      const handle = e.currentTarget;
+      const gi = parseInt(handle.dataset.gi);
+      const ii = parseInt(handle.dataset.ii);
+      const row = handle.closest('.budget-row');
+      if (!row) return;
+
+      dragState = { gi: gi, fromIi: ii, row: row };
+      row.style.opacity = '0.5';
+      row.style.background = 'rgba(99,102,241,0.06)';
+      row.style.borderRadius = '8px';
+
+      document.addEventListener('touchmove', onDragMove, { passive: false });
+      document.addEventListener('touchend', onDragEnd);
+      document.addEventListener('mousemove', onDragMove);
+      document.addEventListener('mouseup', onDragEnd);
+    }
+
+    function getY(e) {
+      if (e.touches && e.touches.length) return e.touches[0].clientY;
+      if (e.changedTouches && e.changedTouches.length) return e.changedTouches[0].clientY;
+      return e.clientY;
+    }
+
+    function onDragMove(e) {
+      if (!dragState) return;
+      e.preventDefault();
+      const y = getY(e);
+      // 같은 그룹의 모든 행 찾기
+      const rows = Array.from(document.querySelectorAll('#budget-container .budget-row[data-gi="' + dragState.gi + '"]'));
+      let target = null;
+      for (const r of rows) {
+        if (r === dragState.row) continue;
+        const rect = r.getBoundingClientRect();
+        if (y >= rect.top && y <= rect.bottom) {
+          target = r;
+          break;
+        }
+      }
+      if (target) {
+        const targetIi = parseInt(target.dataset.ii);
+        const fromIi = parseInt(dragState.row.dataset.ii);
+        if (targetIi !== fromIi) {
+          // 데이터 순서 교체
+          const items = budgetData[dragState.gi].items;
+          const moved = items.splice(fromIi, 1)[0];
+          items.splice(targetIi, 0, moved);
+          // 다시 렌더 후 드래그 상태 유지
+          const savedGi = dragState.gi;
+          renderBudget();
+          // 새로 그려진 행에서 방금 옮긴 항목(targetIi) 다시 잡기
+          const newRow = document.querySelector('#budget-container .budget-row[data-gi="' + savedGi + '"][data-ii="' + targetIi + '"]');
+          if (newRow) {
+            newRow.style.opacity = '0.5';
+            newRow.style.background = 'rgba(99,102,241,0.06)';
+            newRow.style.borderRadius = '8px';
+            dragState.row = newRow;
+          }
+        }
+      }
+    }
+
+    function onDragEnd(e) {
+      if (!dragState) return;
+      if (dragState.row) {
+        dragState.row.style.opacity = '';
+        dragState.row.style.background = '';
+      }
+      dragState = null;
+      document.removeEventListener('touchmove', onDragMove);
+      document.removeEventListener('touchend', onDragEnd);
+      document.removeEventListener('mousemove', onDragMove);
+      document.removeEventListener('mouseup', onDragEnd);
+      renderBudget();
     }
 
     function updateName(gi, ii, value) {
