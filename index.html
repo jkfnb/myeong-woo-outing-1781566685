@@ -369,6 +369,22 @@
       </div>
     </div>
 
+    <!-- 디데이 카운트다운 -->
+    <div id="countdown-box" style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; text-align: center; box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25);">
+      <p style="font-size: 13px; font-weight: 600; opacity: 0.9; margin: 0 0 0.8rem; letter-spacing: 1px;">⏰ 부산 출발까지</p>
+      <div id="countdown-display" style="font-size: 38px; font-weight: 800; letter-spacing: -1px; margin: 0;">D-?</div>
+      <div id="countdown-detail" style="font-size: 13px; opacity: 0.85; margin-top: 0.6rem;"></div>
+    </div>
+
+    <!-- 날씨 위젯 -->
+    <div style="background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.04);">
+      <p style="font-size: 13px; font-weight: 700; color: var(--primary); margin: 0 0 1rem; letter-spacing: 0.5px;">🌤️ 부산 여행 기간 날씨</p>
+      <div id="weather-display" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+        <div style="text-align: center; color: var(--text-light); font-size: 13px; grid-column: 1 / -1; padding: 1rem;">날씨 정보를 불러오는 중...</div>
+      </div>
+      <p style="font-size: 11px; color: var(--text-light); margin: 1rem 0 0; text-align: center;">📍 부산 광역시 · 실시간 예보 (여행 7일 전부터 정확)</p>
+    </div>
+
     <div class="tabs-wrapper">
       <div class="tabs">
         <button class="tab-btn active" onclick="switchDay(1, this)">📅 1일차 06.26</button>
@@ -390,7 +406,8 @@
           <div class="schedule-content">
             <h4>집결 및 픽업</h4>
             <p>각자 집 앞 픽업</p>
-            <p class="meta">→ 명수회원 (대근, 종록) / 요한 / 의준회원</p>
+            <p class="meta">→ 명수님 차 (대근) / 요한 / 의준</p>
+            <p class="meta" style="color: #f59e0b;">⏰ 종록님은 6/27(토) 별도 합류</p>
           </div>
         </div>
 
@@ -532,6 +549,54 @@
         </div>
       </div>
 
+      <!-- 참가자 소개 -->
+      <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--border);">
+        <h3 style="font-size: 20px; font-weight: 700; color: var(--text); margin: 0 0 1.5rem; display: flex; align-items: center; gap: 8px;">
+          👥 참가자 소개
+        </h3>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+          <div style="background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center;">
+            <div style="width: 56px; height: 56px; margin: 0 auto 10px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #818cf8); display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: 800;">명</div>
+            <p style="font-weight: 700; font-size: 16px; margin: 0; color: var(--text);">명수</p>
+            <p style="font-size: 12px; color: var(--text-light); margin: 4px 0 0;">🚗 운전 (대근·종록 픽업)</p>
+          </div>
+
+          <div style="background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center;">
+            <div style="width: 56px; height: 56px; margin: 0 auto 10px; border-radius: 50%; background: linear-gradient(135deg, #ec4899, #f472b6); display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: 800;">대</div>
+            <p style="font-weight: 700; font-size: 16px; margin: 0; color: var(--text);">대근</p>
+            <p style="font-size: 12px; color: var(--text-light); margin: 4px 0 0;">🙋 명수님 차 탑승</p>
+          </div>
+
+          <div style="background: var(--card); border: 2px solid #f59e0b; border-radius: 12px; padding: 1.25rem; text-align: center; position: relative;">
+            <div style="position: absolute; top: 8px; right: 8px; background: #f59e0b; color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px;">27일 합류</div>
+            <div style="width: 56px; height: 56px; margin: 0 auto 10px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #fbbf24); display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: 800;">종</div>
+            <p style="font-weight: 700; font-size: 16px; margin: 0; color: var(--text);">종록</p>
+            <p style="font-size: 12px; color: #f59e0b; margin: 4px 0 0; font-weight: 600;">⏰ 6/27(토) 별도 출발</p>
+          </div>
+
+          <div style="background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center;">
+            <div style="width: 56px; height: 56px; margin: 0 auto 10px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #34d399); display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: 800;">의</div>
+            <p style="font-weight: 700; font-size: 16px; margin: 0; color: var(--text);">의준</p>
+            <p style="font-size: 12px; color: var(--text-light); margin: 4px 0 0;">🚗 개별 출발</p>
+          </div>
+
+          <div style="background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center;">
+            <div style="width: 56px; height: 56px; margin: 0 auto 10px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6, #a78bfa); display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: 800;">요</div>
+            <p style="font-weight: 700; font-size: 16px; margin: 0; color: var(--text);">요한</p>
+            <p style="font-size: 12px; color: var(--text-light); margin: 4px 0 0;">🚗 개별 출발</p>
+          </div>
+
+          <div style="background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center;">
+            <div style="width: 56px; height: 56px; margin: 0 auto 10px; border-radius: 50%; background: linear-gradient(135deg, #0ea5e9, #38bdf8); display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: 800;">종</div>
+            <p style="font-weight: 700; font-size: 16px; margin: 0; color: var(--text);">종근</p>
+            <p style="font-size: 12px; color: var(--text-light); margin: 4px 0 0;">🙌 멤버</p>
+          </div>
+        </div>
+
+        <p style="font-size: 12px; color: var(--text-light); margin-top: 1.2rem; text-align: center;">👨‍👨‍👦 총 6명 · 종록님은 6/27(토) 합류 예정</p>
+      </div>
+
       <!-- 사진 미리보기 -->
       <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--border);">
         <h3 style="font-size: 20px; font-weight: 700; color: var(--text); margin: 0 0 1.5rem; display: flex; align-items: center; gap: 8px;">
@@ -656,6 +721,75 @@
       });
       button.classList.add('active');
     }
+
+    // ===== 디데이 카운트다운 =====
+    function updateCountdown() {
+      const tripDate = new Date('2026-06-26T12:00:00+09:00');
+      const now = new Date();
+      const diff = tripDate - now;
+      const display = document.getElementById('countdown-display');
+      const detail = document.getElementById('countdown-detail');
+
+      if (diff <= 0) {
+        // 여행 기간 또는 종료
+        const endDate = new Date('2026-06-28T23:59:59+09:00');
+        if (now <= endDate) {
+          display.textContent = '🎉 여행 중!';
+          detail.textContent = '즐거운 부산 여행 되세요!';
+        } else {
+          display.textContent = '여행 종료';
+          detail.textContent = '함께한 추억 고생하셨습니다 👏';
+        }
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+      display.textContent = 'D-' + days;
+      detail.textContent = days + '일 ' + hours + '시간 ' + mins + '분 남았어요';
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 60000);
+
+    // ===== 부산 날씨 위젯 =====
+    async function loadWeather() {
+      const display = document.getElementById('weather-display');
+      // 부산 좌표
+      const lat = 35.1796, lon = 129.0756;
+      const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon +
+        '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max' +
+        '&timezone=Asia%2FSeoul&start_date=2026-06-26&end_date=2026-06-28';
+
+      const wcode = {
+        0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️',
+        45: '🌫️', 48: '🌫️', 51: '🌦️', 53: '🌦️', 55: '🌦️',
+        61: '🌧️', 63: '🌧️', 65: '🌧️', 80: '🌦️', 81: '🌧️', 82: '⛈️',
+        95: '⛈️', 96: '⛈️', 99: '⛈️'
+      };
+      const dayLabels = ['1일차 (금)', '2일차 (토)', '3일차 (일)'];
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const d = data.daily;
+        let html = '';
+        for (let i = 0; i < d.time.length; i++) {
+          const icon = wcode[d.weather_code[i]] || '🌡️';
+          html += '<div style="text-align: center; padding: 0.8rem 0.4rem; background: var(--bg); border-radius: 10px;">' +
+            '<p style="font-size: 11px; color: var(--text-light); margin: 0 0 4px; font-weight: 600;">' + (dayLabels[i] || d.time[i]) + '</p>' +
+            '<div style="font-size: 28px; margin: 4px 0;">' + icon + '</div>' +
+            '<p style="font-size: 14px; font-weight: 700; color: var(--text); margin: 0;">' + Math.round(d.temperature_2m_max[i]) + '° / ' + Math.round(d.temperature_2m_min[i]) + '°</p>' +
+            '<p style="font-size: 11px; color: var(--primary); margin: 4px 0 0;">💧 ' + d.precipitation_probability_max[i] + '%</p>' +
+            '</div>';
+        }
+        display.innerHTML = html;
+      } catch (e) {
+        display.innerHTML = '<div style="text-align: center; color: var(--text-light); font-size: 13px; grid-column: 1 / -1; padding: 1rem;">⚠️ 날씨 정보를 불러올 수 없습니다.<br><small>여행이 가까워지면 다시 시도해주세요.</small></div>';
+      }
+    }
+    loadWeather();
   </script>
 </body>
 </html>
