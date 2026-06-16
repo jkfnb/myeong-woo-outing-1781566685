@@ -390,10 +390,11 @@
         <button class="tab-btn active" onclick="switchDay(1, this)">📅 1일차 06.26</button>
         <button class="tab-btn" onclick="switchDay(2, this)">📅 2일차 06.27</button>
         <button class="tab-btn" onclick="switchDay(3, this)">📅 3일차 06.28</button>
+        <button class="tab-btn" onclick="showBudget(this)" style="background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; border-color: #f59e0b;">💰 지출 정산</button>
       </div>
     </div>
 
-    <div class="content">
+    <div class="content" id="schedule-view">
       <!-- 1일차 -->
       <div class="day-section active" id="day-1">
         <div class="day-header">
@@ -703,6 +704,25 @@
       </div>
     </div>
 
+    <!-- 지출 정산 화면 -->
+    <div class="content" id="budget-view" style="display: none;">
+      <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(251, 146, 60, 0.12) 100%); border-left: 5px solid #f59e0b; border-radius: 12px; padding: 1.3rem; margin-bottom: 1.5rem;">
+        <p style="font-size: 12px; color: #f59e0b; margin: 0 0 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">💰 지출 정산</p>
+        <h3 style="font-size: 22px; font-weight: 800; color: var(--text); margin: 0;">명우회 부산여행 사용금액</h3>
+        <p style="font-size: 12px; color: var(--text-light); margin: 0.6rem 0 0;">금액을 입력하면 자동으로 합계가 계산됩니다 ✏️</p>
+      </div>
+
+      <div id="budget-container"></div>
+
+      <!-- 총 합계 -->
+      <div style="background: #fef08a; border-radius: 12px; padding: 1.3rem; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-weight: 800; font-size: 17px; color: #713f12;">지출 합계</span>
+        <span id="grand-total" style="font-weight: 800; font-size: 22px; color: #a16207;">₩0</span>
+      </div>
+
+      <p style="font-size: 12px; color: var(--text-light); margin-top: 1rem; text-align: center;">💡 입력한 금액은 이 기기(브라우저)에만 저장됩니다</p>
+    </div>
+
     <div class="footer">
       <p>✨ 프로토타입 버전</p>
       <p>식사 장소 및 세부 일정은 추후 업데이트될 수 있습니다</p>
@@ -712,6 +732,10 @@
 
   <script>
     function switchDay(day, button) {
+      // 지출 화면 숨기고 일정 화면 보이기
+      document.getElementById('schedule-view').style.display = 'block';
+      document.getElementById('budget-view').style.display = 'none';
+
       // 모든 day-section 숨기기
       document.querySelectorAll('.day-section').forEach(el => {
         el.classList.remove('active');
@@ -726,6 +750,135 @@
       });
       button.classList.add('active');
     }
+
+    // ===== 지출 정산 =====
+    function showBudget(button) {
+      document.getElementById('schedule-view').style.display = 'none';
+      document.getElementById('budget-view').style.display = 'block';
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      button.classList.add('active');
+    }
+
+    // 지출 항목 기본 데이터 (이미지 기준)
+    const budgetData = [
+      {
+        group: '1일차', color: '#6366f1',
+        items: [
+          { name: '휴게소 커피', amount: 28000 },
+          { name: '점심', amount: 250000 },
+          { name: '저녁 1차', amount: 300000 },
+          { name: '저녁 2차', amount: 200000 }
+        ]
+      },
+      {
+        group: '2일차', color: '#ec4899',
+        items: [
+          { name: '아침', amount: 60000 },
+          { name: '커피', amount: 30000 },
+          { name: '부산모빌리티쇼 (1만원x6명)', amount: 60000 },
+          { name: '점심', amount: 150000 },
+          { name: '레이저태그 스포츠', amount: 0 },
+          { name: '카페, 커피', amount: 50000 },
+          { name: '저녁 1차', amount: 300000 },
+          { name: '저녁 2차', amount: 200000 },
+          { name: '저녁 3차', amount: 200000 }
+        ]
+      },
+      {
+        group: '3일차', color: '#0ea5e9',
+        items: [
+          { name: '아침', amount: 200000 },
+          { name: '커피', amount: 30000 }
+        ]
+      },
+      {
+        group: '공용 확정', color: '#10b981',
+        items: [
+          { name: '숙소비 (금1·토2 / 267,300+85,500)', amount: 352800 },
+          { name: '유류비', amount: 140000 },
+          { name: '톨비', amount: 43800 },
+          { name: '현수막 제작', amount: 30000 },
+          { name: '주차 요금', amount: 54000 }
+        ]
+      }
+    ];
+
+    function loadBudget() {
+      try {
+        const saved = localStorage.getItem('myeongwoo_budget_2026');
+        if (saved) {
+          const savedData = JSON.parse(saved);
+          // 저장된 금액 병합
+          budgetData.forEach((g, gi) => {
+            g.items.forEach((item, ii) => {
+              if (savedData[gi] && savedData[gi][ii] !== undefined) {
+                item.amount = savedData[gi][ii];
+              }
+            });
+          });
+        }
+      } catch (e) {}
+    }
+
+    function saveBudget() {
+      try {
+        const toSave = budgetData.map(g => g.items.map(i => i.amount));
+        localStorage.setItem('myeongwoo_budget_2026', JSON.stringify(toSave));
+      } catch (e) {}
+    }
+
+    function formatWon(n) {
+      return '₩' + n.toLocaleString('ko-KR');
+    }
+
+    function renderBudget() {
+      const container = document.getElementById('budget-container');
+      let html = '';
+      budgetData.forEach((group, gi) => {
+        let subtotal = group.items.reduce((s, i) => s + (i.amount || 0), 0);
+        html += '<div style="margin-bottom: 1.5rem;">';
+        html += '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; padding-bottom: 0.5rem; border-bottom: 2px solid ' + group.color + ';">' +
+          '<span style="font-weight: 800; font-size: 16px; color: ' + group.color + ';">' + group.group + '</span>' +
+          '<span id="subtotal-' + gi + '" style="font-weight: 700; font-size: 14px; color: var(--text-light);">' + formatWon(subtotal) + '</span>' +
+          '</div>';
+        group.items.forEach((item, ii) => {
+          html += '<div style="display: flex; align-items: center; gap: 10px; padding: 0.5rem 0;">' +
+            '<span style="flex: 1; font-size: 14px; color: var(--text);">' + item.name + '</span>' +
+            '<div style="display: flex; align-items: center; gap: 4px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; padding: 4px 10px;">' +
+            '<span style="font-size: 13px; color: var(--text-light);">₩</span>' +
+            '<input type="number" inputmode="numeric" value="' + (item.amount || '') + '" placeholder="0" ' +
+            'onchange="updateAmount(' + gi + ',' + ii + ', this.value)" ' +
+            'style="width: 90px; border: none; background: transparent; text-align: right; font-size: 14px; font-weight: 600; color: var(--text); outline: none;">' +
+            '</div></div>';
+        });
+        html += '</div>';
+      });
+      container.innerHTML = html;
+      updateTotals();
+    }
+
+    function updateAmount(gi, ii, value) {
+      budgetData[gi].items[ii].amount = parseInt(value) || 0;
+      updateTotals();
+      saveBudget();
+    }
+
+    function updateTotals() {
+      let grand = 0;
+      budgetData.forEach((group, gi) => {
+        let subtotal = group.items.reduce((s, i) => s + (i.amount || 0), 0);
+        grand += subtotal;
+        const el = document.getElementById('subtotal-' + gi);
+        if (el) el.textContent = formatWon(subtotal);
+      });
+      const grandEl = document.getElementById('grand-total');
+      if (grandEl) grandEl.textContent = formatWon(grand);
+    }
+
+    loadBudget();
+    renderBudget();
 
     // ===== 디데이 카운트다운 =====
     function updateCountdown() {
