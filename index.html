@@ -770,6 +770,11 @@
         <!-- 구간별 이동시간 -->
         <div style="margin-top: 0.9rem; display: flex; flex-direction: column; gap: 8px;">
           <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+            <span style="background: #0ea5e9; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0;">🏨</span>
+            <span style="flex: 1; color: var(--text);">숙소 출발 (아침)</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-light); padding-left: 28px;">↓ 🚗 약 20분</div>
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
             <span style="background: #10b981; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0;">1</span>
             <span style="flex: 1; color: var(--text);">한약방국밥 (아침 10시)</span>
           </div>
@@ -906,11 +911,12 @@
       // --- 2일차 지도 ---
       const m2 = L.map('map2', { scrollWheelZoom: false });
       L.tileLayer(tile, { attribution: attr }).addTo(m2);
+      L.marker(sukso, { icon: pin('🏨', '#0ea5e9') }).addTo(m2).bindPopup('숙소 출발 (아침)');
       L.marker(gukbap, { icon: pin('1', '#10b981') }).addTo(m2).bindPopup('① 한약방국밥 (아침 10시)');
       L.marker(bexco, { icon: pin('2', '#3b82f6') }).addTo(m2).bindPopup('② BEXCO 모빌리티쇼 (11시)');
       L.marker(gop, { icon: pin('3', '#f59e0b') }).addTo(m2).bindPopup('③ 그집곱도리탕 (점심 13:30)');
       L.marker(yeongdo, { icon: pin('4', '#d4537e') }).addTo(m2).bindPopup('④ 영도다리횟집 (저녁 18시)');
-      const line2 = L.polyline([gukbap, bexco, gop, yeongdo], { color: '#ec4899', weight: 4, dashArray: '8 6' }).addTo(m2);
+      const line2 = L.polyline([sukso, gukbap, bexco, gop, yeongdo], { color: '#ec4899', weight: 4, dashArray: '8 6' }).addTo(m2);
       m2.fitBounds(line2.getBounds(), { padding: [35, 35] });
       window._m2 = m2;
 
