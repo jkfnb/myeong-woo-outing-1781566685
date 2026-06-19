@@ -41,25 +41,16 @@
     
     /* ===== Header ===== */
     .header {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-      color: white;
-      padding: 2rem 1.5rem;
+      padding: 0;
       border-radius: 16px;
       margin-bottom: 2rem;
-      box-shadow: 0 12px 36px rgba(99, 102, 241, 0.25);
+      box-shadow: 0 12px 36px rgba(99, 102, 241, 0.2);
       position: relative;
       overflow: hidden;
     }
     
     .header::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-      background-size: 50px 50px;
+      content: none;
     }
     
     .header-content {
@@ -352,10 +343,7 @@
   <div class="container">
     <div class="header">
       <div class="header-content">
-        <h1>🚗 2026 명우회 야유회</h1>
-        <p>부산 2박 3일 여행 • 06.26(금) ~ 06.28(일)</p>
-        <img src="outing.jpg" alt="명우회 단체사진" class="header-img">
-        <p style="font-size: 11px; opacity: 0.8; margin: 0.6rem 0 0;">📷 작년(2025) 워크숍 단체사진</p>
+        <img src="banner.png" alt="2026 명우회 부산 우정여행" style="width: 100%; height: auto; border-radius: 16px; display: block;">
       </div>
     </div>
 
